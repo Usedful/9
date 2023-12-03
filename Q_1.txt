@@ -1,0 +1,90 @@
+Q.1 Design simple HR Application using Spring Framework
+
+Ans -> 
+
+// Employee.java
+import javax.persistence.*;
+
+@Entity
+public class Employee {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String firstName;
+    private String lastName;
+
+    // Getters and setters
+}
+
+// Department.java
+import javax.persistence.*;
+
+@Entity
+public class Department {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+    private String name;
+
+    // Getters and setters
+}
+
+// EmployeeRepository.java
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
+}
+
+// DepartmentRepository.java
+import org.springframework.data.jpa.repository.JpaRepository;
+
+public interface DepartmentRepository extends JpaRepository<Department, Long> {
+}
+
+// EmployeeController.java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/employees")
+public class EmployeeController {
+    @Autowired
+    private EmployeeRepository employeeRepository;
+
+    @GetMapping
+    public List<Employee> getAllEmployees() {
+        return employeeRepository.findAll();
+    }
+
+    @PostMapping
+    public Employee addEmployee(@RequestBody Employee employee) {
+        return employeeRepository.save(employee);
+    }
+
+}
+
+// DepartmentController.java
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/departments")
+public class DepartmentController {
+    @Autowired
+    private DepartmentRepository departmentRepository;
+
+    @GetMapping
+    public List<Department> getAllDepartments() {
+        return departmentRepository.findAll();
+    }
+
+    @PostMapping
+    public Department addDepartment(@RequestBody Department department) {
+        return departmentRepository.save(department);
+    }
+
+}
